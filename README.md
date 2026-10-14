@@ -27,8 +27,10 @@
    * Configurar a tabela de códigos do terminal para UTF-8 (`chcp 65001 > nul`) para preservar caracteres e acentuação no relatório gerado.
    * Limpar a tela (`cls`) e definir cores do terminal via `color` para indicação visual do progresso.
 
-2. **Criação do Arquivo de Saída:**
-   * Inicializar o arquivo `coleta.txt` gravando o cabeçalho e informações básicas de data/hora (`hostname`, `date /T`, `time /T`) utilizando o operador de sobrescrita (`>`).
+2. **Criação do Arquivo de Saída Dinâmico (Padrão Pericial ISO 8601):**
+   * Capturar a data e hora em formato ordenável (`YYYY-MM-DD_HH-MM-SS`) invocando o PowerShell (`Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'`).
+   * Definir a variável do arquivo de log (`LOG_FILE=WinLocalRecon_YYYY-MM-DD_HH-MM-SS.log`) para garantir a rastreabilidade e evitar a sobrescrita acidental de coletas em auditorias recorrentes no mesmo host.
+   * Gravacao do cabeçalho inicial e metadados de execução utilizando o operador de gravação/sobrescrita (`>`).
 
 3. Execução Modularizada do PowerShell:
    * Para cada módulo de coleta (Etapas 01 a 07):
@@ -45,11 +47,12 @@
 
    ---
 
-## 4. Roadmap & Próximas Implementações (v2.0)
+## 4. Roadmap & Próximas Implementações
 
 - [x] **v1.0 - Native Recon Engine:** Coleta autônoma e não invasiva via Batch/PowerShell e WMI/CIM.
-- [ ] **v1.1 - Output Structuring:** Opção para exportar os dados brutos em formato JSON além do relatório TXT.
+- [x] **v1.1 - Dynamic Forensic Logging:** Geração dinâmica de relatório no padrão ISO 8601 (`WinLocalRecon_YYYY-MM-DD_HH-MM-SS.log`) para rastreabilidade forense e não sobrescrita de evidências.
+- [ ] **v1.2 - Output Structuring:** Opção para exportar os dados brutos em formato JSON além do relatório TXT.
 - [ ] **v2.0 - Offline Vulnerability Engine:**
-  - Script parser para consumo do `coleta.txt` na máquina do analista.
+  - Script parser para consumo do arquivo de log na máquina do analista.
   - Integração automatizada com **WES-NG (Windows Exploit Suggester)** para apontar CVEs de elevação local de privilégios (LPE) com base nas KBs ausentes.
   - Mapeamento automático de aplicações desatualizadas contra a base do **NVD (National Vulnerability Database)**.
